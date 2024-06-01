@@ -47,6 +47,12 @@ TagManager:
   - name: BG
     uniqueID: 499743923
     locked: 0
+  - name: Shelves
+    uniqueID: 1062205107
+    locked: 0
+  - name: Checkouts
+    uniqueID: 56549343
+    locked: 0
   - name: NPCs
     uniqueID: 1758903813
     locked: 0
