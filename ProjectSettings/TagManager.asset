@@ -56,3 +56,6 @@ TagManager:
   - name: NPCs
     uniqueID: 1758903813
     locked: 0
+  - name: Cursor
+    uniqueID: 2843721677
+    locked: 0
