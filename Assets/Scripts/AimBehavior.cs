@@ -41,7 +41,7 @@ public class AimBehavior : MonoBehaviour
         }    
     }
 
-    void CursorLogic() //handling cursor mouse positioning
+    void CursorLogic() //handling cursor mouse positioning yeah
     {
         Cursor.visible = false;
         //Debug.Log(aimPos);
