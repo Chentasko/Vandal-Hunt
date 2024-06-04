@@ -12,7 +12,6 @@ public class AimBehavior : MonoBehaviour
     bool shootTrigger = false;
     float loadTime = 3;
     
-
     // Start is called before the first frame update
     void Start()
     {
@@ -20,40 +19,29 @@ public class AimBehavior : MonoBehaviour
         GetComponent<Collider2D>().isTrigger = shootTrigger;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
-    }
-    IEnumerator ShootingPenalty()
-    {
-        isFreeToShoot = false;
-        Debug.Log("I am WAITING");
-        yield return new WaitForSeconds(10f);
-        Debug.Log("I am NOW DONE WAITING");
-        
-    }
-
-    void ShootLogic() //Doðru çalýþmýyor burayý yeniden yap. Void ve ifler yerine hepsini bir IEnumerator içinde kullanmayý dene (
+    }    
+    
+    IEnumerator ShootLogic() //main shooting coroutine
     {
         if (Input.GetMouseButtonDown(0) && isFreeToShoot) 
         {
-
-            Debug.Log("SHOOT SHOOT BAM BAM");
             shootTrigger = true;
-            //isFreeToShoot = false;
-            //ses kodu gelecek buraya
-            
-
-        } else if (!isFreeToShoot)
-        {
-            shootTrigger = false;
-            Debug.Log("i cant shoot right now PENALTY");
+            isFreeToShoot = false;
+            Debug.Log("Shot!");
+            //shooting sound code 
         
-        }
-        else 
-        {
-            
-        }   
+        } else if (shootTrigger)
+        { 
+            shootTrigger = false;
+            Debug.Log("Waiting...");  
+            yield return new WaitForSeconds(loadTime);
+            isFreeToShoot = true;
+            Debug.Log("Done! Next round?");
+            //reloading sound code 
+        }    
     }
 
-    void CursorLogic() 
+    void CursorLogic() //handling cursor mouse positioning
     {
         Cursor.visible = false;
         //Debug.Log(aimPos);
@@ -66,10 +54,8 @@ public class AimBehavior : MonoBehaviour
     void Update()
     {
         CursorLogic();
-        ShootLogic();
+        StartCoroutine(ShootLogic());
         
-
-
         //Transform.Position.x = aimPos.x; 
         //Transform.Position.x = aimPos.y;
     }
