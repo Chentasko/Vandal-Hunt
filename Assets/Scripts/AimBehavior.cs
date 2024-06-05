@@ -11,14 +11,22 @@ public class AimBehavior : MonoBehaviour
     bool isFreeToShoot = true;
     bool shootTrigger = false;
     float loadTime = 3;
-    
+
+    [SerializeField] AudioClip shootsound; //might not need these
+    [SerializeField] AudioClip reloadsound; //might not need these
+    [SerializeField] AudioSource shootSoundSource;
+    [SerializeField] AudioSource reloadSoundSource;
+
     // Start is called before the first frame update
     void Start()
     {
-        GetComponent<Transform>().position = aimPos;
-        GetComponent<Collider2D>().isTrigger = shootTrigger;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
+        GetComponent<Transform>().position = aimPos;
+        GetComponent<Collider2D>().isTrigger = shootTrigger;
+        shootSoundSource = GetComponent<AudioSource>();
+        shootsound = GetComponent<AudioClip>();
+        reloadsound = GetComponent<AudioClip>();
     }    
     
     IEnumerator ShootLogic() //main shooting coroutine
@@ -27,17 +35,18 @@ public class AimBehavior : MonoBehaviour
         {
             shootTrigger = true;
             isFreeToShoot = false;
+            shootSoundSource.Play();
             Debug.Log("Shot!");
-            //shooting sound code 
-        
+            //shooting sound code (might refine later)        
         } else if (shootTrigger)
         { 
             shootTrigger = false;
             Debug.Log("Waiting...");  
             yield return new WaitForSeconds(loadTime);
             isFreeToShoot = true;
+            reloadSoundSource.Play();
             Debug.Log("Done! Next round?");
-            //reloading sound code 
+            //reloading sound code (might refine later)
         }    
     }
 
@@ -54,8 +63,7 @@ public class AimBehavior : MonoBehaviour
     void Update()
     {
         CursorLogic();
-        StartCoroutine(ShootLogic());
-        
+        StartCoroutine(ShootLogic());        
         //Transform.Position.x = aimPos.x; 
         //Transform.Position.x = aimPos.y;
     }
