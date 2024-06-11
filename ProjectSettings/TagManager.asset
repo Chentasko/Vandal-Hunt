@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Customers
+  - Checkout
+  - Shelves
+  - Walls
+  - Targets
   layers:
   - Default
   - TransparentFX
@@ -56,6 +60,9 @@ TagManager:
     locked: 0
   - name: NPCs
     uniqueID: 1758903813
+    locked: 0
+  - name: Shelves 2
+    uniqueID: 2204778775
     locked: 0
   - name: Cursor
     uniqueID: 2843721677

@@ -10,7 +10,7 @@ public class AimBehavior : MonoBehaviour
     Vector2 mousPos; //fare 
     bool isFreeToShoot = true;
     bool shootTrigger = false;
-    float loadTime = 3;
+    float loadTime = 2;
 
     [SerializeField] AudioClip shootsound; //might not need these
     [SerializeField] AudioClip reloadsound; //might not need these
