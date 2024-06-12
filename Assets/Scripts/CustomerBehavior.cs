@@ -24,6 +24,8 @@ public class CustomerBehavior : MonoBehaviour
     public int diceRollDouble;
     public int diceRollTriple;
 
+
+
     [SerializeField] Transform target;
     SpriteRenderer skin;
     Vector2 lastPosition;
@@ -32,15 +34,16 @@ public class CustomerBehavior : MonoBehaviour
     bool left = true;
     bool init = false;
 
-    float waitMin = 3.0f;
-    float waitMax = 7.0f;
-    float waitTime;
+    int waitMin = 3;
+    int waitMax = 7;
+    int waitTime;
+    float currentTime;
 
     NavMeshAgent agent;
     public State customerState;
     public AnimationState customerAnimationState;
     public string Targets;
-
+    float waitMultiplier = 1; //will be 0 at initialisation
     public void Animate() 
     {
         Vector2 currentPosition = transform.position;
@@ -131,6 +134,30 @@ public class CustomerBehavior : MonoBehaviour
         }
     }
 
+    void DeltaWaitigCalculations()
+    {
+
+
+        //float currentTimeCalculation = waitTime + Time.deltaTime; //0.6
+        //currentTime
+        //waitTime == 0.4      
+        //waitTime = UnityEngine.Random.Range(1, 4);
+
+        if (currentTime >= waitTime)
+        {
+            Debug.Log("I've waited exactly " + waitTime);
+            waitMultiplier = 0; //If commented out, This will make the waiter stopwatch keep repeating over and over again.
+            waitTime = UnityEngine.Random.Range(waitMin, waitMax);
+            currentTime = 0;
+        } 
+        else 
+        {
+            currentTime = (currentTime + Time.deltaTime) * waitMultiplier; //.2 //.4 //.6 //.8
+            //Debug.Log(currentTime);
+        }          
+    }
+
+
     IEnumerator RandomWaitInterval() 
     {
         //float waitTime = Random.Range(waitMin, waitMax);
@@ -143,24 +170,26 @@ public class CustomerBehavior : MonoBehaviour
         isOnWaitPenalty = false;
         //Debug.Log("WAIT DONE " + isOnWaitPenalty);
     }
-    IEnumerator MainAI()
+    IEnumerator MainAI() //will most likely not be a courotine 
     {
-        
-        waitTime = UnityEngine.Random.Range(waitMin, waitMax); //waiting before doing ANYTHING wheter coming from a state or just starting. Everything comes back to this (hopefully)
+        DeltaWaitigCalculations();
+
+
+        //waitTime = UnityEngine.Random.Range(waitMin, waitMax); //waiting before doing ANYTHING wheter coming from a state or just starting. Everything comes back to this (hopefully)
         isOnWaitPenalty = true;
-        yield return new WaitForSeconds(waitTime);
+        //yield return new WaitForSeconds(waitTime);
         //carry = true; //This should stay COMMENTED OUT. Otherwise it is just for testing purposes only
 
         isOnWaitPenalty = false;
         diceRollTriple = UnityEngine.Random.Range(1, 4);
-        //diceRollTriple = 3; //comment this out 
+        diceRollTriple = 1; //comment this out 
 
         //THIS SECTION HANDLES RANDOM BEHAVIOR SELECTION. DON'T FORGET TO MAKE SURE YOU HAVE IMPLEMENTED RANDOM WAIT INTERVALS.
 
         if (diceRollTriple == 1 && ActivateAI) //Idle state. Move somewhere freely (or maybe just stand still and wait? decide on that)
         {
             customerState = State.Idle;
-            waitTime = UnityEngine.Random.Range(waitMin, waitMax);
+            //waitTime = UnityEngine.Random.Range(waitMin, waitMax);
             isOnWaitPenalty = true;
             //yield return new WaitForSeconds(waitTime);
             isOnWaitPenalty = false;
@@ -181,7 +210,7 @@ public class CustomerBehavior : MonoBehaviour
                     criminal = true; //CAN SHOOT NOW
                     customerState = State.Moving; //it is moving but to the exit with the items they stole.
                     //set.target = to the exit?? something like that
-                } 
+                }
                 else if (!criminalWillBe) //not criminal
                 {
                     while (!init)
@@ -220,7 +249,7 @@ public class CustomerBehavior : MonoBehaviour
             
             isOnWaitPenalty = true;
             //Debug.Log("RANDOM WAITING " + isOnWaitPenalty);
-            waitTime = UnityEngine.Random.Range(waitMin, waitMax);
+            //waitTime = UnityEngine.Random.Range(waitMin, waitMax);
             //yield return new WaitForSeconds(waitTime);
             isOnWaitPenalty = false;
             carry = true;
@@ -288,6 +317,9 @@ public class CustomerBehavior : MonoBehaviour
         {
             criminalWillBe = true; //will steal
         }
+
+        currentTime = Time.deltaTime;
+        waitTime = 7;
     }
 
     void PathfindTEST() 
