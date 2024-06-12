@@ -3187,12 +3187,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec0390b7e8c43440a64b401770ba329, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  criminalChance: 0
+  criminalChance: 50
   criminal: 0
   carry: 0
   speed: 20
   distance: 0
   target: {fileID: 1943251502}
+  customerState: 0
   Targets: 
 --- !u!195 &1121038047
 NavMeshAgent:
@@ -4123,7 +4124,7 @@ Transform:
   m_GameObject: {fileID: 1943251500}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.89, y: 1.93, z: 0}
+  m_LocalPosition: {x: -0.18, y: 1.47, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
