@@ -10,6 +10,8 @@ using static UnityEngine.GraphicsBuffer;
 
 public class CustomerBehavior : MonoBehaviour
 {
+    [SerializeField] bool ActivateAI;
+
     bool isOnWaitPenalty = false;
 
     [SerializeField] private float criminalChance;
@@ -144,17 +146,17 @@ public class CustomerBehavior : MonoBehaviour
     IEnumerator MainAI()
     {
         
-        waitTime = UnityEngine.Random.Range(waitMin, waitMax); //waiting before doing ANYTHING wheter coming from a state or just starting. Everything comes back to this (hopefully)
-        isOnWaitPenalty = true;
-        yield return new WaitForSeconds(waitTime);
-        carry = true;
-        isOnWaitPenalty = false;
+        //waitTime = UnityEngine.Random.Range(waitMin, waitMax); //waiting before doing ANYTHING wheter coming from a state or just starting. Everything comes back to this (hopefully)
+        //isOnWaitPenalty = true;
+        //yield return new WaitForSeconds(waitTime);
+        //carry = true;
+        //isOnWaitPenalty = false;
         diceRollTriple = UnityEngine.Random.Range(1, 4);
         
 
         //THIS SECTION HANDLES RANDOM BEHAVIOR SELECTION. DON'T FORGET TO MAKE SURE YOU HAVE IMPLEMENTED RANDOM WAIT INTERVALS.
 
-        if (diceRollTriple == 1) //Idle state. Move somewhere freely (or maybe just stand still and wait? decide on that)
+        if (diceRollTriple == 1 && ActivateAI) //Idle state. Move somewhere freely (or maybe just stand still and wait? decide on that)
         {
             customerState = State.Idle;
             waitTime = UnityEngine.Random.Range(waitMin, waitMax);
@@ -165,7 +167,7 @@ public class CustomerBehavior : MonoBehaviour
             //customerAnimationState = AnimationState.Walking; Uncomment this if Idle will mean moving randomly somewhere
 
         }
-        else if (diceRollTriple == 2) //carry checking code. if they carry anything and if criminal, will either escape or back to the loop (seek flowchart for more info)
+        else if (diceRollTriple == 2 && ActivateAI) //carry checking code. if they carry anything and if criminal, will either escape or back to the loop (seek flowchart for more info)
         {
             diceRollDouble = UnityEngine.Random.Range(1, 3);
             if (carry && diceRollDouble == 1) 
@@ -193,7 +195,7 @@ public class CustomerBehavior : MonoBehaviour
             }
 
         } 
-        else if (diceRollTriple == 3) //Pick up items!! 
+        else if (diceRollTriple == 3 && ActivateAI) //Pick up items!! 
         {
             customerState = State.Moving;
             while (!init && customerState == State.Moving) 
