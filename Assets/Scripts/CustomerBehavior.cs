@@ -139,7 +139,7 @@ public class CustomerBehavior : MonoBehaviour
         isOnWaitPenalty = true;
         //Debug.Log("RANDOM WAITING " + isOnWaitPenalty);
         waitTime = UnityEngine.Random.Range(waitMin, waitMax);
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(waitTime);
         isOnWaitPenalty = false;
         //Debug.Log("WAIT DONE " + isOnWaitPenalty);
     }
@@ -301,7 +301,7 @@ public class CustomerBehavior : MonoBehaviour
     {
         //PathfindTEST();
         //Animate();
-        StartCoroutine(MainAI());
-        //StartCoroutine(RandomWaitInterval()); //DO NOT FORGET TO COMMENT THIS OUT
+        //StartCoroutine(MainAI());
+        StartCoroutine(RandomWaitInterval()); //DO NOT FORGET TO COMMENT THIS OUT (Currently uncommented to test if it causes a crash)
     }
 }
