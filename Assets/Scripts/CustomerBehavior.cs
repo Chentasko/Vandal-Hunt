@@ -137,7 +137,7 @@ public class CustomerBehavior : MonoBehaviour
         isOnWaitPenalty = true;
         //Debug.Log("RANDOM WAITING " + isOnWaitPenalty);
         waitTime = UnityEngine.Random.Range(waitMin, waitMax);
-        yield return new WaitForSeconds(waitTime);
+        yield return new WaitForSeconds(10);
         isOnWaitPenalty = false;
         //Debug.Log("WAIT DONE " + isOnWaitPenalty);
     }
@@ -145,6 +145,7 @@ public class CustomerBehavior : MonoBehaviour
     {
         
         waitTime = UnityEngine.Random.Range(waitMin, waitMax); //waiting before doing ANYTHING wheter coming from a state or just starting. Everything comes back to this (hopefully)
+        isOnWaitPenalty = true;
         yield return new WaitForSeconds(waitTime);
         carry = true;
         isOnWaitPenalty = false;
@@ -156,6 +157,10 @@ public class CustomerBehavior : MonoBehaviour
         if (diceRollTriple == 1) //Idle state. Move somewhere freely (or maybe just stand still and wait? decide on that)
         {
             customerState = State.Idle;
+            waitTime = UnityEngine.Random.Range(waitMin, waitMax);
+            isOnWaitPenalty = true;
+            yield return new WaitForSeconds(waitTime);
+            isOnWaitPenalty = false;
             //customerAnimationState = AnimationState.Standby; Uncomment this if Idle will mean stand still
             //customerAnimationState = AnimationState.Walking; Uncomment this if Idle will mean moving randomly somewhere
 
@@ -165,7 +170,7 @@ public class CustomerBehavior : MonoBehaviour
             diceRollDouble = UnityEngine.Random.Range(1, 3);
             if (carry && diceRollDouble == 1) 
             { 
-                //The innocent will go to checkout here. The criminal will leave.
+                //The innocent will go to checkout here. The criminal will leave. yeah
                 if (criminalWillBe) 
                 {
                     criminal = true; //CAN SHOOT NOW
@@ -292,9 +297,9 @@ public class CustomerBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        PathfindTEST();
-        Animate();
+        //PathfindTEST();
+        //Animate();
         StartCoroutine(MainAI());
-        StartCoroutine(RandomWaitInterval()); //DO NOT FORGET TO COMMENT THIS OUT
+        //StartCoroutine(RandomWaitInterval()); //DO NOT FORGET TO COMMENT THIS OUT
     }
 }
