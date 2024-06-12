@@ -146,13 +146,14 @@ public class CustomerBehavior : MonoBehaviour
     IEnumerator MainAI()
     {
         
-        //waitTime = UnityEngine.Random.Range(waitMin, waitMax); //waiting before doing ANYTHING wheter coming from a state or just starting. Everything comes back to this (hopefully)
-        //isOnWaitPenalty = true;
-        //yield return new WaitForSeconds(waitTime);
-        //carry = true;
-        //isOnWaitPenalty = false;
+        waitTime = UnityEngine.Random.Range(waitMin, waitMax); //waiting before doing ANYTHING wheter coming from a state or just starting. Everything comes back to this (hopefully)
+        isOnWaitPenalty = true;
+        yield return new WaitForSeconds(waitTime);
+        //carry = true; //This should stay COMMENTED OUT. Otherwise it is just for testing purposes only
+
+        isOnWaitPenalty = false;
         diceRollTriple = UnityEngine.Random.Range(1, 4);
-        
+        //diceRollTriple = 3; //comment this out 
 
         //THIS SECTION HANDLES RANDOM BEHAVIOR SELECTION. DON'T FORGET TO MAKE SURE YOU HAVE IMPLEMENTED RANDOM WAIT INTERVALS.
 
@@ -161,15 +162,17 @@ public class CustomerBehavior : MonoBehaviour
             customerState = State.Idle;
             waitTime = UnityEngine.Random.Range(waitMin, waitMax);
             isOnWaitPenalty = true;
-            yield return new WaitForSeconds(waitTime);
+            //yield return new WaitForSeconds(waitTime);
             isOnWaitPenalty = false;
-            //customerAnimationState = AnimationState.Standby; Uncomment this if Idle will mean stand still
+            customerAnimationState = AnimationState.Standby; //Uncomment this if Idle will mean stand still
             //customerAnimationState = AnimationState.Walking; Uncomment this if Idle will mean moving randomly somewhere
+            Debug.Log("First behaviour executed");
 
         }
         else if (diceRollTriple == 2 && ActivateAI) //carry checking code. if they carry anything and if criminal, will either escape or back to the loop (seek flowchart for more info)
         {
             diceRollDouble = UnityEngine.Random.Range(1, 3);
+            diceRollDouble = 1; //comment this out
             if (carry && diceRollDouble == 1) 
             { 
                 //The innocent will go to checkout here. The criminal will leave. yeah
@@ -192,7 +195,13 @@ public class CustomerBehavior : MonoBehaviour
 
                 
 
+            } 
+            else 
+            { 
+                //Finish executing this behaviour. Go back to RWI (the waiting at the top)
             }
+
+            Debug.Log("Second behaviour executed");
 
         } 
         else if (diceRollTriple == 3 && ActivateAI) //Pick up items!! 
@@ -200,7 +209,7 @@ public class CustomerBehavior : MonoBehaviour
             customerState = State.Moving;
             while (!init && customerState == State.Moving) 
             {
-                agent.SetDestination(target.position); //MOVING TO GET 
+                agent.SetDestination(target.position); //MOVING TO GET s
             }
 
             customerState = State.Picking;
@@ -212,12 +221,14 @@ public class CustomerBehavior : MonoBehaviour
             isOnWaitPenalty = true;
             //Debug.Log("RANDOM WAITING " + isOnWaitPenalty);
             waitTime = UnityEngine.Random.Range(waitMin, waitMax);
-            yield return new WaitForSeconds(waitTime);
+            //yield return new WaitForSeconds(waitTime);
             isOnWaitPenalty = false;
             carry = true;
+            
 
             customerState = State.Idle;
             customerAnimationState = AnimationState.Standby;
+            Debug.Log("Third behaviour executed"); 
         }
 
         //while (customerState == State.Moving && !isOnWaitPenalty) 
@@ -301,7 +312,7 @@ public class CustomerBehavior : MonoBehaviour
     {
         //PathfindTEST();
         //Animate();
-        //StartCoroutine(MainAI());
-        StartCoroutine(RandomWaitInterval()); //DO NOT FORGET TO COMMENT THIS OUT (Currently uncommented to test if it causes a crash)
+        StartCoroutine(MainAI());
+        //StartCoroutine(RandomWaitInterval()); //DO NOT FORGET TO COMMENT THIS OUT (Doesn't crash. It's not the yield implementetion. It's the MainAI coroutine causing the problem itself.)
     }
 }

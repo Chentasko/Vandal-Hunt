@@ -3449,6 +3449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec0390b7e8c43440a64b401770ba329, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ActivateAI: 1
   criminalChance: 50
   criminalWillBe: 0
   criminal: 0
