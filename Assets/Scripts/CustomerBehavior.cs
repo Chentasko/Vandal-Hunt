@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Schema;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.GraphicsBuffer;
 
 public class CustomerBehavior : MonoBehaviour
 {
@@ -16,8 +18,14 @@ public class CustomerBehavior : MonoBehaviour
     [SerializeField] Transform target;
     SpriteRenderer skin;
     Vector2 lastPosition;
+    bool touching = false;
+    bool touch = false;
+    bool left = true;
+    bool init = false;
 
     NavMeshAgent agent;
+
+    public string Targets;
 
     public void Animate() 
     {
@@ -45,7 +53,7 @@ public class CustomerBehavior : MonoBehaviour
         
         //} else 
         //{
-            Debug.Log("STOP STOP STOP STOP STOP");
+        //Debug.Log("STOP STOP STOP STOP STOP");
         //}
 
         lastPosition = currentPosition;  
@@ -56,6 +64,54 @@ public class CustomerBehavior : MonoBehaviour
         Moving,
         Picking,
         Dead,
+    }
+    void OnTriggerEnter2D(Collider2D other)
+    {     
+        Debug.Log("Touched target!");
+
+        if (init!) 
+        {
+            Debug.Log("Touched target!");
+            touch = true;
+        } else 
+        {
+            touch = false;
+        }
+    }
+
+    void OnTriggerStay2D(Collider2D other)
+    {
+        
+        if (touch)
+        {
+            init = true;
+            Debug.Log("With the target!");
+        } else 
+        {
+            touching = false;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        Debug.Log("It is gone!");
+        if (touch) 
+        {
+            Debug.Log("It is gone!");
+            touch = false;
+        } else 
+        {
+            touch = true;
+        }
+    }
+    IEnumerator MainAI()
+    {
+        agent.SetDestination(target.position);
+        
+
+        
+
+        yield return null;
     }
 
 
@@ -73,7 +129,7 @@ public class CustomerBehavior : MonoBehaviour
 
     void PathfindTEST() 
     {
-        agent.SetDestination(target.position);
+        //agent.SetDestination(target.position);
 
     }
 
@@ -87,10 +143,12 @@ public class CustomerBehavior : MonoBehaviour
         
     }
 
+
     // Update is called once per frame
     void Update()
     {
         PathfindTEST();
         Animate();
+        StartCoroutine(MainAI());
     }
 }
