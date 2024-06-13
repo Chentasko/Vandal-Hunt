@@ -21,6 +21,8 @@ public class CustomerBehavior : MonoBehaviour
     [SerializeField] float speed = 20;
     [SerializeField] float distance = 0; //use????
 
+    
+
     public int diceRollDouble;
     public int diceRollTriple;
 
@@ -143,9 +145,6 @@ public class CustomerBehavior : MonoBehaviour
     //}  
     // }
 
-
-
-
     IEnumerator DeltaWaitingCalculationsCoroutine()
     {
         waitTime = UnityEngine.Random.Range(waitMin, waitMax);
@@ -247,21 +246,34 @@ public class CustomerBehavior : MonoBehaviour
     }
     void MoveToTarget() 
     {
-        //while (!init)
-        //{
-        //    agent.SetDestination(target.position);
-        //    customerAnimationState = AnimationState.Walking;
-        //}
-        //customerAnimationState = AnimationState.Standby;
+        while (!init)
+        {
+            agent.SetDestination(target.position);
+            customerAnimationState = AnimationState.Walking;
+        }
+        customerAnimationState = AnimationState.Standby;
+    }
+    IEnumerator MoveToTarget2()
+    {
+        customerAnimationState = AnimationState.Walking;
+
+        while (!init)
+        {
+            agent.SetDestination(target.position);
+            yield return null; // Wait for the next frame
+        }
+
+        customerAnimationState = AnimationState.Standby;
     }
 
     IEnumerator MainAI2()
     {
+        criminalWillBe = true;
         if (criminalWillBe)
         {
             Debug.Log("I am a criminal!");
             // set target store
-            MoveToTarget(); // coming to store
+            yield return StartCoroutine(MoveToTarget2()); //MoveToTarget(); // coming to store
             yield return StartCoroutine(DeltaWaitingCalculationsCoroutine());
 
             diceRollDouble = UnityEngine.Random.Range(1, 3);
@@ -269,7 +281,7 @@ public class CustomerBehavior : MonoBehaviour
             {
                 Debug.Log("I'm going to pick up items!");
                 // set target shelf
-                MoveToTarget(); // moving to a shelf
+                yield return StartCoroutine(MoveToTarget2()); //MoveToTarget(); // moving to a shelf
                 customerAnimationState = AnimationState.HandsMoving;
                 yield return StartCoroutine(DeltaWaitingCalculationsCoroutine());
                 carry = true;
@@ -281,20 +293,20 @@ public class CustomerBehavior : MonoBehaviour
                 {
                     // set target exit
                     Debug.Log("I AM RUNNING AWAY CATCH ME IF YOU CAN");
-                    MoveToTarget();
+                    yield return StartCoroutine(MoveToTarget2()); //MoveToTarget();
                 }
                 else // if true, I am just going to wait/move randomly
                 {
                     Debug.Log("I will move a bit more... don't have any items");
                     customerAnimationState = AnimationState.Standby;
                     // set target random around
-                    MoveToTarget();
+                    yield return StartCoroutine(MoveToTarget2()); //MoveToTarget();
                     yield return StartCoroutine(DeltaWaitingCalculationsCoroutine());
                 }
             }
         }
     }
-    void MainAI2DEF() 
+    void MainAI2DEAD() 
     { 
         if (criminalWillBe) 
         {
@@ -344,14 +356,24 @@ public class CustomerBehavior : MonoBehaviour
 
     }
 
+    IEnumerator MainAI2Loop()
+    {
+        while (true)
+        {
+            yield return StartCoroutine(MainAI2());
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        
         agent = GetComponent<NavMeshAgent>();
         skin = GetComponent<SpriteRenderer>();     
         agent.updateRotation = false;
         agent.updateUpAxis = false;
         lastPosition = transform.position;
+        
 
         //customerState = State.Moving;
         //customerAnimationState = AnimationState.Standby;
@@ -362,11 +384,12 @@ public class CustomerBehavior : MonoBehaviour
         //    criminalWillBe = true; //will be innocent but DONT FORGET TO MAKE THIS FALSE
         //} else if (criminalChanceUsing <= 50) 
         //{
-            //criminalWillBe = true; //will steal
+        //criminalWillBe = true; //will steal
         //}
         criminalWillBe = true;
         currentTime = Time.deltaTime;
         waitTime = 7;
+        StartCoroutine(MainAI2Loop());
     }
 
    
