@@ -13,6 +13,7 @@ public class CustomerBehavior : MonoBehaviour
     [SerializeField] bool ActivateAI;
 
     bool isOnWaitPenalty = false;
+    bool dead = false;
 
     [SerializeField] private float criminalChance;
     [SerializeField] private bool criminalWillBe;
@@ -27,6 +28,9 @@ public class CustomerBehavior : MonoBehaviour
 
 
     [SerializeField] Transform target;
+    
+
+
     SpriteRenderer skin;
     Vector2 lastPosition;
     bool touching = false;
@@ -34,9 +38,14 @@ public class CustomerBehavior : MonoBehaviour
     bool left = true;
     bool init = false;
     bool imleaving = false;
+<<<<<<< Updated upstream
+=======
+    bool isWaiting = false;
+    bool justStarted = true;
+>>>>>>> Stashed changes
 
-    int waitMin = 3;
-    int waitMax = 7;
+    int waitMin = 1;
+    int waitMax = 4;
     int waitTime;
     float currentTime;
 
@@ -93,11 +102,11 @@ public class CustomerBehavior : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D other)
     {     
-        Debug.Log("Touched target!");
+        //Debug.Log("Touched target!");
 
         if (init!) 
         {
-            Debug.Log("Touched target!");
+            //Debug.Log("Touched target!");
             touch = true;
         } else 
         {
@@ -113,7 +122,7 @@ public class CustomerBehavior : MonoBehaviour
         if (touch)
         {
             init = true;
-            Debug.Log("With the target!");
+            //Debug.Log("With the target!");
         } else 
         {
             touching = false;
@@ -123,10 +132,10 @@ public class CustomerBehavior : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D other)
     {
-        Debug.Log("It is gone!");
+        //Debug.Log("It is gone!");
         if (touch) 
         {
-            Debug.Log("It is gone!");
+            //Debug.Log("It is gone!");
             touch = false;
             customerState = State.Moving;
         } else 
@@ -248,11 +257,161 @@ public class CustomerBehavior : MonoBehaviour
         DeltaWaitigCalculations();
         yield return null;
     }
+<<<<<<< Updated upstream
 
+=======
+    void MoveToTarget() 
+    {
+        while (!init)
+        {
+            agent.SetDestination(target.position);
+            customerAnimationState = AnimationState.Walking;
+        }
+        customerAnimationState = AnimationState.Standby;
+    }
+    IEnumerator MoveToTarget2(Transform target)
+    {
+        customerAnimationState = AnimationState.Walking;
+
+        while (Vector2.Distance(transform.position, target.position) > 0.2f)
+        {
+            agent.SetDestination(target.position);
+            yield return null; // Wait for the next frame
+        }
+
+        customerAnimationState = AnimationState.Standby;
+        Debug.Log("MOVE DONE");
+    }
+
+    IEnumerator MainAI2()
+    {
+        criminalWillBe = true;
+
+        if (justStarted) 
+        {
+            target.SendMessage("TargetCenter"); // set target store
+            yield return StartCoroutine(MoveToTarget2(target)); //MoveToTarget(); // coming to store
+        }
+
+        if (criminalWillBe)
+        {
+            Debug.Log("I am a criminal!");
+            yield return StartCoroutine(DeltaWaitingCalculationsCoroutine());
+            
+            
+
+            diceRollDouble = UnityEngine.Random.Range(1, 3);
+            if (diceRollDouble == 1) // if true, I will pick up items
+            {
+                Debug.Log("I'm going to pick up items!");
+                target.SendMessage("TargetRandomShelf"); // set target shelf
+                yield return StartCoroutine(MoveToTarget2(target)); //MoveToTarget(); // moving to a shelf
+                customerAnimationState = AnimationState.HandsMoving;
+                yield return StartCoroutine(DeltaWaitingCalculationsCoroutine()); //keeping the animation going for a random time
+                carry = true;
+                Debug.Log("TeeheeHEEE I picked up items!");
+            }
+            else if (diceRollDouble == 2) // if true, I am carrying and will attempt to steal OR will just wait/move randomly
+            {
+                if (carry) // if true, I am carrying and will attempt to steal
+                {
+                    // set target exit
+                    criminal = true;
+                    Debug.Log("I AM RUNNING AWAY CATCH ME IF YOU CAN");
+                    target.SendMessage("TargetExit");
+                    yield return StartCoroutine(MoveToTarget2(target)); //MoveToTarget();
+                }
+                else // if true, I am just going to wait/move randomly
+                {
+                    Debug.Log("I will move a bit more... don't have any items");
+                    customerAnimationState = AnimationState.Standby;
+                    target.SendMessage("TargetCenter"); // set target random around
+                    yield return StartCoroutine(MoveToTarget2(target)); //MoveToTarget();
+                    yield return StartCoroutine(DeltaWaitingCalculationsCoroutine());
+                }
+            }
+        }
+        justStarted = false;
+    }
+    void MainAI2DEAD() 
+    { 
+        if (criminalWillBe) 
+        {
+            Debug.Log("I am a criminal!");
+            //set target store
+            MoveToTarget(); //coming to store
+            //DeltaWaitingCalculations();
+            diceRollDouble = UnityEngine.Random.Range(1, 3);
+            if (diceRollDouble == 1) //if true, i will pick up items
+            {
+                Debug.Log("I'm going to pickup items!");
+                //set target shelf
+                MoveToTarget(); //moving to a shelf
+                customerAnimationState = AnimationState.HandsMoving;
+                //DeltaWaitingCalculations(); 
+                carry = true;
+                Debug.Log("TeeheeHEEE I picked up items!");
+            }
+            else if (diceRollDouble == 2) //if true, i am carrying and will attempt to steal OR will just wait/move randomly (probably not the latter it's 3:30 am)
+            {
+                if (carry == true) //if true, i am carrying and will attempt to steal
+                {
+                    //set target exit
+                    Debug.Log("I AM RUNNING AWAY CATCH ME IF YOU CAN");
+                    MoveToTarget();
+
+                } else if (carry == false) //if true, i am just going to wait/move randomly (probably not the latter it's 3:30 am)
+                {
+                    Debug.Log("i will move a bit more... dont have any items");
+                    customerAnimationState = AnimationState.Standby;
+                    //set target random around
+                    MoveToTarget();
+                    //DeltaWaitingCalculations();
+                }
+            }
+        }
+      //is this where it ends?? ?
+    }
+
+    void PathfindTEST()
+    {
+        //agent.SetDestination(target.position);
+    }
+    void TargetSpawningTEST()
+    {
+
+
+    }
+
+    IEnumerator MainAI2Loop()
+    {
+        while (true)
+        {
+            yield return StartCoroutine(MainAI2());
+        }
+    }
+>>>>>>> Stashed changes
+
+    public void OnDeath() 
+    { 
+        if (criminal) 
+        {
+            Debug.Log("!! !! !!YOU WIN!! !! !!");
+            Destroy(gameObject);
+        } else 
+        {
+            Debug.Log("!! !! LOSER LOL !! !!");
+        }
+        
+    }
 
     // Start is called before the first frame update
     void Start()
     {
+<<<<<<< Updated upstream
+=======
+        GameObject targetObject = GameObject.Find("Target");
+>>>>>>> Stashed changes
         agent = GetComponent<NavMeshAgent>();
         skin = GetComponent<SpriteRenderer>();     
         agent.updateRotation = false;
@@ -272,7 +431,12 @@ public class CustomerBehavior : MonoBehaviour
         }
 
         currentTime = Time.deltaTime;
+<<<<<<< Updated upstream
         waitTime = 7;
+=======
+        waitTime = 2;
+        StartCoroutine(MainAI2Loop());
+>>>>>>> Stashed changes
     }
 
     void PathfindTEST() 
@@ -296,8 +460,13 @@ public class CustomerBehavior : MonoBehaviour
     void Update()
     {
         //PathfindTEST();
+<<<<<<< Updated upstream
         //Animate();
         StartCoroutine(MainAI());
+=======
+        Animate();
+        //StartCoroutine(MainAI()); no. just no.
+>>>>>>> Stashed changes
         //StartCoroutine(RandomWaitInterval()); //DO NOT FORGET TO COMMENT THIS OUT (Doesn't crash. It's not the yield implementetion. It's the MainAI coroutine causing the problem itself.)
     }
 }
