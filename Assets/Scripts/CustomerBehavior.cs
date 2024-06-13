@@ -33,6 +33,7 @@ public class CustomerBehavior : MonoBehaviour
     bool touch = false;
     bool left = true;
     bool init = false;
+    bool imleaving = false;
 
     int waitMin = 3;
     int waitMax = 7;
@@ -136,14 +137,7 @@ public class CustomerBehavior : MonoBehaviour
 
     void DeltaWaitigCalculations()
     {
-
-
-        //float currentTimeCalculation = waitTime + Time.deltaTime; //0.6
-        //currentTime
-        //waitTime == 0.4      
-        //waitTime = UnityEngine.Random.Range(1, 4);
-
-        if (currentTime >= waitTime)
+        if (currentTime >= waitTime && waitMultiplier != 0)
         {
             Debug.Log("I've waited exactly " + waitTime);
             waitMultiplier = 0; //If commented out, This will make the waiter stopwatch keep repeating over and over again.
@@ -170,31 +164,22 @@ public class CustomerBehavior : MonoBehaviour
         isOnWaitPenalty = false;
         //Debug.Log("WAIT DONE " + isOnWaitPenalty);
     }
-    IEnumerator MainAI() //will most likely not be a courotine 
+    IEnumerator MainAI() //will most likely not be a courotine. switch to a main void function if necessary
     {
-        DeltaWaitigCalculations();
-
-
-        //waitTime = UnityEngine.Random.Range(waitMin, waitMax); //waiting before doing ANYTHING wheter coming from a state or just starting. Everything comes back to this (hopefully)
-        isOnWaitPenalty = true;
-        //yield return new WaitForSeconds(waitTime);
-        //carry = true; //This should stay COMMENTED OUT. Otherwise it is just for testing purposes only
-
-        isOnWaitPenalty = false;
         diceRollTriple = UnityEngine.Random.Range(1, 4);
-        diceRollTriple = 1; //comment this out 
-
-        //THIS SECTION HANDLES RANDOM BEHAVIOR SELECTION. DON'T FORGET TO MAKE SURE YOU HAVE IMPLEMENTED RANDOM WAIT INTERVALS.
+        //diceRollTriple = 1; //comment this out 
+        diceRollTriple = 2; //commet this out too
 
         if (diceRollTriple == 1 && ActivateAI) //Idle state. Move somewhere freely (or maybe just stand still and wait? decide on that)
         {
             customerState = State.Idle;
-            //waitTime = UnityEngine.Random.Range(waitMin, waitMax);
-            isOnWaitPenalty = true;
-            //yield return new WaitForSeconds(waitTime);
-            isOnWaitPenalty = false;
-            customerAnimationState = AnimationState.Standby; //Uncomment this if Idle will mean stand still
-            //customerAnimationState = AnimationState.Walking; Uncomment this if Idle will mean moving randomly somewhere
+            //set target following           
+            //customerAnimationState = AnimationState.Standby; //Uncomment this if Idle will mean stand still
+            customerAnimationState = AnimationState.Walking; //Uncomment this if Idle will mean moving randomly somewhere (IT MOVES DESTINATION)
+            while (!init)
+            {
+                agent.SetDestination(target.position);
+            }
             Debug.Log("First behaviour executed");
 
         }
@@ -202,14 +187,15 @@ public class CustomerBehavior : MonoBehaviour
         {
             diceRollDouble = UnityEngine.Random.Range(1, 3);
             diceRollDouble = 1; //comment this out
-            if (carry && diceRollDouble == 1) 
+            if (carry && diceRollDouble == 1) //diceRollDouble equaling to 1 means the customer will either try to escape or checkout
             { 
                 //The innocent will go to checkout here. The criminal will leave. yeah
                 if (criminalWillBe) 
                 {
                     criminal = true; //CAN SHOOT NOW
-                    customerState = State.Moving; //it is moving but to the exit with the items they stole.
                     //set.target = to the exit?? something like that
+                    customerState = State.Moving; //it is moving but to the exit with the items they stole.
+                    
                 }
                 else if (!criminalWillBe) //not criminal
                 {
@@ -218,12 +204,12 @@ public class CustomerBehavior : MonoBehaviour
                         agent.SetDestination(target.position); //going to checkout? dont forget to set it up. just like them all
                     }
 
+                    customerState = State.Picking;
+                    customerAnimationState = AnimationState.HandsMoving;
                     //checking out is the usual animation. code that too
                     //lastly it will leave the store. BEING INNOCENT.
                 }
-
-                
-
+                imleaving = true;
             } 
             else 
             { 
@@ -238,7 +224,7 @@ public class CustomerBehavior : MonoBehaviour
             customerState = State.Moving;
             while (!init && customerState == State.Moving) 
             {
-                agent.SetDestination(target.position); //MOVING TO GET s
+                agent.SetDestination(target.position); //MOVING TO GET ITEMS
             }
 
             customerState = State.Picking;
@@ -259,40 +245,7 @@ public class CustomerBehavior : MonoBehaviour
             customerAnimationState = AnimationState.Standby;
             Debug.Log("Third behaviour executed"); 
         }
-
-        //while (customerState == State.Moving && !isOnWaitPenalty) 
-        //{
-            //agent.SetDestination(target.position);
-            //play walking animation or something
-           
-        //} 
-
-        //if (init) 
-        //{
-            //customerState = State.Picking;
-
-
-            //isOnWaitPenalty = true;
-            //picking animation code
-            //picking sound code 
-            //Debug.Log("RANDOM WAITING " + isOnWaitPenalty);
-            
-            //customerState = State.Moving;
-            //Debug.Log("WAIT DONE " + isOnWaitPenalty);
-
-            
-        //}
-
-
-        //start first by moving to the aile
-        //if (touch) 
-        //{
-            
-
-        //}
-        
-        
-        
+        DeltaWaitigCalculations();
         yield return null;
     }
 
