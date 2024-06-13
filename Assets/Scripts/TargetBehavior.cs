@@ -18,8 +18,6 @@ public class TargetBehavior : MonoBehaviour
     public GameObject checkoutB1;
     public GameObject checkoutB2;
     public GameObject checkoutB3;
-    //private object shelvesABounds;
-
     public void TargetRandomShelf()
     {
         Collider2D shelvesACollider = shelvesA.GetComponent<Collider2D>();
@@ -137,17 +135,14 @@ public class TargetBehavior : MonoBehaviour
                 break;
         }
         transform.position = newPosition;
-
     }
     public void TargetCenter()
     {
-        //Collider2D centerCollider = center.GetComponent<Collider2D>();
-        Transform centerTransfrom = center.GetComponent<Transform>();
+        //collider2D centerCollider = center.GetComponent<Collider2D>();
+        Transform centerTransform = center.GetComponent<Transform>();
 
-        transform.position = centerTransfrom.position;
-
+        transform.position = centerTransform.position;
         //Vector2 newPosition = Vector2.zero;
-
     }
 
     public void TargetExit()
@@ -160,19 +155,7 @@ public class TargetBehavior : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Collider2D centerCollider = center.GetComponent<Collider2D>();
-        Collider2D exitCollider = exit.GetComponent<Collider2D>();
 
-        //Collider2D shelvesACollider = shelvesA.GetComponent<Collider2D>();
-        //Collider2D shelvesBCollider = shelvesB.GetComponent<Collider2D>();
-        //Collider2D shelvesFridgeCollider = shelvesFridge.GetComponent<Collider2D>();
-
-        Collider2D checkoutA1collider = checkoutA1.GetComponent<Collider2D>();
-        Collider2D checkoutA2collider = checkoutA2.GetComponent<Collider2D>();
-        Collider2D checkoutA3collider = checkoutA3.GetComponent<Collider2D>();
-        Collider2D checkoutB1collider = checkoutB1.GetComponent<Collider2D>();
-        Collider2D checkoutB2collider = checkoutB2.GetComponent<Collider2D>();
-        Collider2D checkoutB3collider = checkoutB3.GetComponent<Collider2D>();
     }
 
     // Update is called once per frame

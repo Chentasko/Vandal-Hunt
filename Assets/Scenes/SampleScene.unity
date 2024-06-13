@@ -2823,50 +2823,6 @@ MonoBehaviour:
   m_Area: 1
   m_IgnoreFromBuild: 0
   m_AffectedAgents: ffffffff
---- !u!1 &832492567
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 832492569}
-  - component: {fileID: 832492568}
-  m_Layer: 0
-  m_Name: SPAWNER
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &832492568
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 832492567}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63c29dad5e5bd174bb7263a53e89bbcd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &832492569
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 832492567}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.58007944, y: -0.20022483, z: -0.07057875}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &834272229
 GameObject:
   m_ObjectHideFlags: 0
@@ -3787,12 +3743,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ActivateAI: 1
-  criminalChance: 50
   criminalWillBe: 0
   criminal: 0
   carry: 0
-  speed: 20
-  distance: 0
+  criminalChance: 50
   diceRollDouble: 0
   diceRollTriple: 0
   target: {fileID: 1943251502}
@@ -4850,50 +4804,6 @@ MonoBehaviour:
   checkoutB1: {fileID: 579908404}
   checkoutB2: {fileID: 1387048040}
   checkoutB3: {fileID: 538548635}
---- !u!1 &1993350542
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1993350544}
-  - component: {fileID: 1993350543}
-  m_Layer: 0
-  m_Name: Grid Spawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1993350543
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1993350542}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dd9c0a68ebf62f4592cdcccaeee1860, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1993350544
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1993350542}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.17628922, y: -0.2909278, z: -0.08362108}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2038098905
 GameObject:
   m_ObjectHideFlags: 0
@@ -6516,7 +6426,5 @@ SceneRoots:
   - {fileID: 32630025}
   - {fileID: 1365855086}
   - {fileID: 764372849}
-  - {fileID: 1993350544}
   - {fileID: 834272230}
   - {fileID: 1906934458}
-  - {fileID: 832492569}

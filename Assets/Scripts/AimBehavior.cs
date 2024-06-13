@@ -17,7 +17,6 @@ public class AimBehavior : MonoBehaviour
     bool isFreeToShoot = true;
     bool shootTrigger = false;
     float loadTime = 0.8f;
-    
 
     [SerializeField] AudioClip shootsound; //might not need these
     [SerializeField] AudioClip reloadsound; //might not need these
@@ -51,21 +50,17 @@ public class AimBehavior : MonoBehaviour
             //ALSO BELOW
 
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            // Cast a ray from the current position towards the mouse position
+            // cast ray to hit the player so it even incase of imperfect Z axis allignments
             RaycastHit2D hit = Physics2D.Raycast(transform.position, (mousePosition - (Vector2)transform.position).normalized);
             if (hit.collider != null)
             {
                 Debug.Log("Shot!");
                 shootSoundSource.Play();
 
-                // Check if the hit object is an enemy (adjust tag as needed)
-                if (hit.collider.CompareTag("Customers"))
+                if (hit.collider.CompareTag("Customers")) //checks if the hit object is a customer 
                 {
                     Debug.Log("CUSTOMER hit! Sending death message.");
-                    
                     customer.SendMessage("OnDeath");
-                    // Here you can send a death message or trigger some other action on the enemy
-                    // Example: hit.collider.GetComponent<EnemyScript>().TakeDamage();
                 }
             }
         } else if (shootTrigger)
@@ -76,38 +71,22 @@ public class AimBehavior : MonoBehaviour
             isFreeToShoot = true;
             reloadSoundSource.Play();
             Debug.Log("Done! Next round?");
-            
         }    
     }
 
-    void CursorLogic() //handling cursor mouse positioning yeah
+    void CursorLogic() //handling cursor mouse positioning
     {
         Cursor.visible = false;
-        //Debug.Log(aimPos);
         mousPos = Input.mousePosition;
         aimPos = Camera.main.ScreenToWorldPoint(mousPos);
         transform.position = aimPos;
     }
-    //void OnTriggerEnter2D(Collider2D other)
-    //{
-        //Debug.Log("TRIGGERWORK HELLO HELLO HELLO");
-        //if (other.CompareTag("Customers")) // Assuming the collider you shoot at is tagged as "Enemy"
-        //{
-            //Debug.Log("Enemy hit! Sending death message.");
-            // Here you can send a death message or trigger some other action on the enemy
-            // Example: other.GetComponent<EnemyScript>().TakeDamage();
-        //}
-    //}
-
-    // Update is called once per frame
-
     void RestartCheck() 
     { 
         if (Input.GetKeyDown("r")) 
         {
             // Get the current scene index
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-
             // Reload the current scene
             SceneManager.LoadScene(currentSceneIndex);
         }
@@ -117,9 +96,5 @@ public class AimBehavior : MonoBehaviour
         CursorLogic();
         StartCoroutine(ShootLogic());
         RestartCheck();
-        //Transform.Position.x = aimPos.x; 
-        //Transform.Position.x = aimPos.y;
-    }
-
-    
+    }  
 }

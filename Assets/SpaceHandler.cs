@@ -17,7 +17,7 @@ public class SpaceHandler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space)) 
         {       
             int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-            SceneManager.LoadScene(currentSceneIndex + 1);
+            SceneManager.LoadScene(currentSceneIndex + 1); //go next level
             
         }
     }
