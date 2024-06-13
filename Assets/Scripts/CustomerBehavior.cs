@@ -22,6 +22,8 @@ public class CustomerBehavior : MonoBehaviour
     [SerializeField] float speed = 20;
     [SerializeField] float distance = 0; //use????
 
+    
+
     public int diceRollDouble;
     public int diceRollTriple;
 
@@ -38,11 +40,8 @@ public class CustomerBehavior : MonoBehaviour
     bool left = true;
     bool init = false;
     bool imleaving = false;
-<<<<<<< Updated upstream
-=======
     bool isWaiting = false;
     bool justStarted = true;
->>>>>>> Stashed changes
 
     int waitMin = 1;
     int waitMax = 4;
@@ -71,18 +70,6 @@ public class CustomerBehavior : MonoBehaviour
         {
             return;
         }
-        // DISCARDED MOVEMENT RECOGNITION. WAS SUPPOSED TO HANDLE WALKING ANIMATIONS. IT DOESN'T WORK. 
-        //Debug.Log(totalMovement);
-
-        //if(movement.x < -0.01f | movement.x > 0.01f | movement.y < -0.01f | movement.y > 0.01f) 
-        //{
-        //    Debug.Log("WALK WALK WALK WALK WALK");
-        
-        //} else 
-        //{
-        //Debug.Log("STOP STOP STOP STOP STOP");
-        //}
-
         lastPosition = currentPosition;  
     }
     public enum State
@@ -144,34 +131,39 @@ public class CustomerBehavior : MonoBehaviour
         }
     }
 
-    void DeltaWaitigCalculations()
+    //void DeltaWaitingCalculations()
+    //{
+
+    //    waitTime = UnityEngine.Random.Range(waitMin, waitMax);
+
+    //  Debug.Log("I will now start waiting for " + waitTime + " seconds!");
+    //if (currentTime <= waitTime) 
+    //{
+    //  while (currentTime <= waitTime)
+    //{
+    //  currentTime = (currentTime + Time.deltaTime) * waitMultiplier; //.2 //.4 //.6 //.8                                                                     //Debug.Log(currentTime);
+    //}
+    //} else 
+    //{
+    //  currentTime = 0;
+    // Debug.Log("I've waited exactly " + waitTime);
+    //}  
+    // }
+
+    IEnumerator DeltaWaitingCalculationsCoroutine()
     {
-        if (currentTime >= waitTime && waitMultiplier != 0)
-        {
-            Debug.Log("I've waited exactly " + waitTime);
-            waitMultiplier = 0; //If commented out, This will make the waiter stopwatch keep repeating over and over again.
-            waitTime = UnityEngine.Random.Range(waitMin, waitMax);
-            currentTime = 0;
-        } 
-        else 
-        {
-            currentTime = (currentTime + Time.deltaTime) * waitMultiplier; //.2 //.4 //.6 //.8
-            //Debug.Log(currentTime);
-        }          
-    }
-
-
-    IEnumerator RandomWaitInterval() 
-    {
-        //float waitTime = Random.Range(waitMin, waitMax);
-        
-
-        isOnWaitPenalty = true;
-        //Debug.Log("RANDOM WAITING " + isOnWaitPenalty);
         waitTime = UnityEngine.Random.Range(waitMin, waitMax);
-        yield return new WaitForSeconds(waitTime);
-        isOnWaitPenalty = false;
-        //Debug.Log("WAIT DONE " + isOnWaitPenalty);
+        Debug.Log("I will now start waiting for " + waitTime + " seconds!");
+
+        currentTime = 0;
+
+        while (currentTime <= waitTime)
+        {
+            currentTime += Time.deltaTime * waitMultiplier;
+            yield return null; // Wait for the next frame
+        }
+
+        Debug.Log("I've waited exactly " + waitTime + " seconds");
     }
     IEnumerator MainAI() //will most likely not be a courotine. switch to a main void function if necessary
     {
@@ -254,12 +246,9 @@ public class CustomerBehavior : MonoBehaviour
             customerAnimationState = AnimationState.Standby;
             Debug.Log("Third behaviour executed"); 
         }
-        DeltaWaitigCalculations();
+        //DeltaWaitingCalculations();
         yield return null;
     }
-<<<<<<< Updated upstream
-
-=======
     void MoveToTarget() 
     {
         while (!init)
@@ -390,7 +379,6 @@ public class CustomerBehavior : MonoBehaviour
             yield return StartCoroutine(MainAI2());
         }
     }
->>>>>>> Stashed changes
 
     public void OnDeath() 
     { 
@@ -408,65 +396,42 @@ public class CustomerBehavior : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-<<<<<<< Updated upstream
-=======
         GameObject targetObject = GameObject.Find("Target");
->>>>>>> Stashed changes
         agent = GetComponent<NavMeshAgent>();
         skin = GetComponent<SpriteRenderer>();     
         agent.updateRotation = false;
         agent.updateUpAxis = false;
         lastPosition = transform.position;
+        
 
-        customerState = State.Moving;
-        customerAnimationState = AnimationState.Standby;
+        //customerState = State.Moving;
+        //customerAnimationState = AnimationState.Standby;
 
-        float criminalChanceUsing = UnityEngine.Random.Range(1, 101); //Determines if the customer will steal or not at start
-        if (criminalChanceUsing > 50) 
-        {
-            criminalWillBe = false; //will be innocent    
-        } else if (criminalChanceUsing <= 50) 
-        {
-            criminalWillBe = true; //will steal
-        }
-
+        //float criminalChanceUsing = UnityEngine.Random.Range(1, 101); //Determines if the customer will steal or not at start
+        //if (criminalChanceUsing > 50) 
+        //{
+        //    criminalWillBe = true; //will be innocent but DONT FORGET TO MAKE THIS FALSE
+        //} else if (criminalChanceUsing <= 50) 
+        //{
+        //criminalWillBe = true; //will steal
+        //}
+        criminalWillBe = true;
         currentTime = Time.deltaTime;
-<<<<<<< Updated upstream
-        waitTime = 7;
-=======
         waitTime = 2;
         StartCoroutine(MainAI2Loop());
->>>>>>> Stashed changes
     }
 
-    void PathfindTEST() 
-    {
-        //agent.SetDestination(target.position);
-
-    }
-
-    void TargetSpawningTEST() 
-    { 
-        
-    
-    }
-    void CustomerAI() 
-    { 
-        
-    }
-
+   
 
     // Update is called once per frame
     void Update()
     {
+
+
+        //MainAI2();
         //PathfindTEST();
-<<<<<<< Updated upstream
-        //Animate();
-        StartCoroutine(MainAI());
-=======
         Animate();
         //StartCoroutine(MainAI()); no. just no.
->>>>>>> Stashed changes
         //StartCoroutine(RandomWaitInterval()); //DO NOT FORGET TO COMMENT THIS OUT (Doesn't crash. It's not the yield implementetion. It's the MainAI coroutine causing the problem itself.)
     }
 }
