@@ -30,6 +30,7 @@ public class CustomerBehavior : MonoBehaviour
 
 
     [SerializeField] Transform target;
+    [SerializeField] GameObject text;
     
 
 
@@ -274,7 +275,7 @@ public class CustomerBehavior : MonoBehaviour
 
     IEnumerator MainAI2()
     {
-        criminalWillBe = true;
+        //criminalWillBe = true;
 
         if (justStarted) 
         {
@@ -309,6 +310,9 @@ public class CustomerBehavior : MonoBehaviour
                     Debug.Log("I AM RUNNING AWAY CATCH ME IF YOU CAN");
                     target.SendMessage("TargetExit");
                     yield return StartCoroutine(MoveToTarget2(target)); //MoveToTarget();
+                    text.SendMessage("Lost");
+                    Destroy(gameObject);
+
                 }
                 else // if true, I am just going to wait/move randomly
                 {
@@ -319,6 +323,45 @@ public class CustomerBehavior : MonoBehaviour
                     yield return StartCoroutine(DeltaWaitingCalculationsCoroutine());
                 }
             }
+        }
+        else 
+        {
+            Debug.Log("I am innocent");
+            yield return StartCoroutine(DeltaWaitingCalculationsCoroutine());
+            diceRollDouble = UnityEngine.Random.Range(1, 3);
+            if (diceRollDouble == 1) // if true, I will pick up items
+            {
+                Debug.Log("I'm going to pick up items!");
+                target.SendMessage("TargetRandomShelf"); // set target shelf
+                yield return StartCoroutine(MoveToTarget2(target)); //MoveToTarget(); // moving to a shelf
+                customerAnimationState = AnimationState.HandsMoving;
+                yield return StartCoroutine(DeltaWaitingCalculationsCoroutine()); //keeping the animation going for a random time
+                carry = true;
+                Debug.Log("TeeheeHEEE I picked up items!");
+            }
+            else if (diceRollDouble == 2) // if true, I am carrying and will attempt to pay check OR will just wait/move randomly
+            {
+                if (carry) // if true, I am carrying and will self checkout, then leave
+                {
+                    // set target exit
+                    Debug.Log("I will pay now");
+                    target.SendMessage("TargetRandomCheckout");
+                    yield return StartCoroutine(MoveToTarget2(target)); //MoveToTarget();
+                    yield return StartCoroutine(DeltaWaitingCalculationsCoroutine());
+                    target.SendMessage("TargetExit");
+                    yield return StartCoroutine(MoveToTarget2(target));
+                    text.SendMessage("WonPassive");
+                    Destroy(gameObject);
+
+                }
+                else // if true, I am just going to wait randomly
+                {
+                    Debug.Log("Innocent will move a bit more... don't have any items");
+                    yield return StartCoroutine(DeltaWaitingCalculationsCoroutine());
+                    customerAnimationState = AnimationState.Standby;
+                }
+            }
+
         }
         justStarted = false;
     }
@@ -385,18 +428,24 @@ public class CustomerBehavior : MonoBehaviour
         if (criminal) 
         {
             Debug.Log("!! !! !!YOU WIN!! !! !!");
+            text.SendMessage("Won");
             Destroy(gameObject);
+
         } else 
         {
             Debug.Log("!! !! LOSER LOL !! !!");
+            text.SendMessage("Lost");
+            Destroy(gameObject);
+
         }
-        
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
         GameObject targetObject = GameObject.Find("Target");
+        GameObject text = GameObject.Find("Text");
         agent = GetComponent<NavMeshAgent>();
         skin = GetComponent<SpriteRenderer>();     
         agent.updateRotation = false;
@@ -404,18 +453,17 @@ public class CustomerBehavior : MonoBehaviour
         lastPosition = transform.position;
         
 
-        //customerState = State.Moving;
-        //customerAnimationState = AnimationState.Standby;
-
-        //float criminalChanceUsing = UnityEngine.Random.Range(1, 101); //Determines if the customer will steal or not at start
-        //if (criminalChanceUsing > 50) 
-        //{
-        //    criminalWillBe = true; //will be innocent but DONT FORGET TO MAKE THIS FALSE
-        //} else if (criminalChanceUsing <= 50) 
-        //{
-        //criminalWillBe = true; //will steal
-        //}
-        criminalWillBe = true;
+        customerState = State.Moving;
+        customerAnimationState = AnimationState.Standby;
+        float criminalChanceUsing = UnityEngine.Random.Range(1, 101); //Determines if the customer will steal or not at start
+        if (criminalChanceUsing > 50) 
+        {
+            criminalWillBe = false; //will be innocent but DONT FORGET TO MAKE THIS FALSE
+        } else if (criminalChanceUsing <= 50) 
+        {
+        criminalWillBe = true; //will steal
+        }
+        //criminalWillBe = true;
         currentTime = Time.deltaTime;
         waitTime = 2;
         StartCoroutine(MainAI2Loop());

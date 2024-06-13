@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class TargetBehavior : MonoBehaviour
 {
@@ -83,12 +84,60 @@ public class TargetBehavior : MonoBehaviour
             newPosition.y = shelvesFridgeBounds.min.y;
                 
         }
-        
         transform.position = newPosition;
     }
     void TargetRandomCheckout() 
-    { 
-    
+    {
+        Collider2D checkoutA1Collider = checkoutA1.GetComponent<Collider2D>();
+        Collider2D checkoutA2Collider = checkoutA2.GetComponent<Collider2D>();
+        Collider2D checkoutA3Collider = checkoutA3.GetComponent<Collider2D>();
+
+        Collider2D checkoutB1Collider = checkoutB1.GetComponent<Collider2D>();
+        Collider2D checkoutB2Collider = checkoutB2.GetComponent<Collider2D>();
+        Collider2D checkoutB3Collider = checkoutB3.GetComponent<Collider2D>();
+
+        Bounds checkoutA1Bounds = checkoutA1Collider.bounds;
+        Bounds checkoutA2Bounds = checkoutA2Collider.bounds;
+        Bounds checkoutA3Bounds = checkoutA3Collider.bounds;
+
+        Bounds checkoutB1Bounds = checkoutB1Collider.bounds;
+        Bounds checkoutB2Bounds = checkoutB2Collider.bounds;
+        Bounds checkoutB3Bounds = checkoutB3Collider.bounds;
+
+        
+        int checkoutSelector = Random.Range(1, 7);
+        Vector2 newPosition = Vector2.zero;
+        switch (checkoutSelector) 
+        {
+            case 1: //checkoutA1
+
+                newPosition.x = checkoutA1Bounds.max.x;
+                newPosition.y = Random.Range(checkoutA1Bounds.min.y, checkoutA1Bounds.max.y);
+                break;
+
+            case 2: //checkoutA2
+                newPosition.x = checkoutA2Bounds.max.x;
+                newPosition.y = Random.Range(checkoutA2Bounds.min.y, checkoutA2Bounds.max.y);
+                break;
+            case 3: //checkoutA3
+                newPosition.x = checkoutA3Bounds.max.x;
+                newPosition.y = Random.Range(checkoutA3Bounds.min.y, checkoutA3Bounds.max.y);
+                break;
+            case 4: //checkoutB1
+                newPosition.x = checkoutB1Bounds.min.x;
+                newPosition.y = Random.Range(checkoutB1Bounds.min.y, checkoutB1Bounds.max.y);
+                break;
+            case 5: //checkoutB2
+                newPosition.x = checkoutB2Bounds.min.x;
+                newPosition.y = Random.Range(checkoutB2Bounds.min.y, checkoutB2Bounds.max.y);
+                break;
+            case 6: //checkoutB3
+                newPosition.x = checkoutB3Bounds.min.x;
+                newPosition.y = Random.Range(checkoutB3Bounds.min.y, checkoutB3Bounds.max.y);
+                break;
+        }
+        transform.position = newPosition;
+
     }
     public void TargetCenter()
     {

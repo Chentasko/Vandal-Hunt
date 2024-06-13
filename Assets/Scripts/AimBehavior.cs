@@ -4,6 +4,8 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class AimBehavior : MonoBehaviour
 {
@@ -15,11 +17,14 @@ public class AimBehavior : MonoBehaviour
     bool isFreeToShoot = true;
     bool shootTrigger = false;
     float loadTime = 0.8f;
+    
 
     [SerializeField] AudioClip shootsound; //might not need these
     [SerializeField] AudioClip reloadsound; //might not need these
     [SerializeField] AudioSource shootSoundSource;
     [SerializeField] AudioSource reloadSoundSource;
+
+    [SerializeField] Text infoText; // Reference to the UI Text component
 
     // Start is called before the first frame update
     void Start()
@@ -57,6 +62,7 @@ public class AimBehavior : MonoBehaviour
                 if (hit.collider.CompareTag("Customers"))
                 {
                     Debug.Log("CUSTOMER hit! Sending death message.");
+                    
                     customer.SendMessage("OnDeath");
                     // Here you can send a death message or trigger some other action on the enemy
                     // Example: hit.collider.GetComponent<EnemyScript>().TakeDamage();
@@ -94,10 +100,23 @@ public class AimBehavior : MonoBehaviour
     //}
 
     // Update is called once per frame
+
+    void RestartCheck() 
+    { 
+        if (Input.GetKeyDown("r")) 
+        {
+            // Get the current scene index
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+
+            // Reload the current scene
+            SceneManager.LoadScene(currentSceneIndex);
+        }
+    }
     void Update()
     {
         CursorLogic();
         StartCoroutine(ShootLogic());
+        RestartCheck();
         //Transform.Position.x = aimPos.x; 
         //Transform.Position.x = aimPos.y;
     }
