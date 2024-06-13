@@ -62,18 +62,6 @@ public class CustomerBehavior : MonoBehaviour
         {
             return;
         }
-        // DISCARDED MOVEMENT RECOGNITION. WAS SUPPOSED TO HANDLE WALKING ANIMATIONS. IT DOESN'T WORK. 
-        //Debug.Log(totalMovement);
-
-        //if(movement.x < -0.01f | movement.x > 0.01f | movement.y < -0.01f | movement.y > 0.01f) 
-        //{
-        //    Debug.Log("WALK WALK WALK WALK WALK");
-        
-        //} else 
-        //{
-        //Debug.Log("STOP STOP STOP STOP STOP");
-        //}
-
         lastPosition = currentPosition;  
     }
     public enum State
@@ -135,20 +123,19 @@ public class CustomerBehavior : MonoBehaviour
         }
     }
 
-    void DeltaWaitigCalculations()
+    void DeltaWaitingCalculations()
     {
-        if (currentTime >= waitTime && waitMultiplier != 0)
+        Debug.Log("I will now start waiting!");
+        waitTime = UnityEngine.Random.Range(waitMin, waitMax);
+        if (currentTime <= waitTime) 
         {
-            Debug.Log("I've waited exactly " + waitTime);
-            waitMultiplier = 0; //If commented out, This will make the waiter stopwatch keep repeating over and over again.
-            waitTime = UnityEngine.Random.Range(waitMin, waitMax);
-            currentTime = 0;
-        } 
-        else 
-        {
-            currentTime = (currentTime + Time.deltaTime) * waitMultiplier; //.2 //.4 //.6 //.8
-            //Debug.Log(currentTime);
-        }          
+            while (currentTime <= waitTime)
+            {
+                currentTime = (currentTime + Time.deltaTime) * waitMultiplier; //.2 //.4 //.6 //.8                                                                     //Debug.Log(currentTime);
+            }
+        }
+        currentTime = 0;
+        Debug.Log("I've waited exactly " + waitTime);        
     }
 
 
@@ -245,10 +232,67 @@ public class CustomerBehavior : MonoBehaviour
             customerAnimationState = AnimationState.Standby;
             Debug.Log("Third behaviour executed"); 
         }
-        DeltaWaitigCalculations();
+        DeltaWaitingCalculations();
         yield return null;
     }
+    void MoveToTarget() 
+    {
+        while (!init)
+        {
+            agent.SetDestination(target.position);
+            customerAnimationState = AnimationState.Walking;
+        }
+        customerAnimationState = AnimationState.Standby;
+    }
+    void MainAI2() 
+    { 
+        if (criminalWillBe) 
+        {
+            Debug.Log("I am a criminal!");
+            //set target store
+            MoveToTarget(); //coming to store
+            DeltaWaitingCalculations();
+            diceRollDouble = UnityEngine.Random.Range(1, 3);
+            if (diceRollDouble == 1) //if true, i will pick up items
+            {
+                Debug.Log("I'm going to pickup items!");
+                //set target shelf
+                MoveToTarget(); //moving to a shelf
+                customerAnimationState = AnimationState.HandsMoving;
+                DeltaWaitingCalculations(); 
+                carry = true;
+                Debug.Log("TeeheeHEEE I picked up items!");
+            }
+            else if (diceRollDouble == 2) //if true, i am carrying and will attempt to steal OR will just wait/move randomly (probably not the latter it's 3:30 am)
+            {
+                if (carry == true) //if true, i am carrying and will attempt to steal
+                {
+                    //set target exit
+                    Debug.Log("I AM RUNNING AWAY CATCH ME IF YOU CAN");
+                    MoveToTarget();
 
+                } else if (carry == false) //if true, i am just going to wait/move randomly (probably not the latter it's 3:30 am)
+                {
+                    Debug.Log("i will move a bit more...");
+                    customerAnimationState = AnimationState.Standby;
+                    //set target random around
+                    MoveToTarget();
+                    DeltaWaitingCalculations();
+                }
+            }
+        }
+    
+    }
+
+    void PathfindTEST()
+    {
+        //agent.SetDestination(target.position);
+    }
+    void TargetSpawningTEST()
+    {
+
+
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -265,7 +309,7 @@ public class CustomerBehavior : MonoBehaviour
         float criminalChanceUsing = UnityEngine.Random.Range(1, 101); //Determines if the customer will steal or not at start
         if (criminalChanceUsing > 50) 
         {
-            criminalWillBe = false; //will be innocent    
+            criminalWillBe = true; //will be innocent but DONT FORGET TO MAKE THIS FALSE
         } else if (criminalChanceUsing <= 50) 
         {
             criminalWillBe = true; //will steal
@@ -275,29 +319,15 @@ public class CustomerBehavior : MonoBehaviour
         waitTime = 7;
     }
 
-    void PathfindTEST() 
-    {
-        //agent.SetDestination(target.position);
-
-    }
-
-    void TargetSpawningTEST() 
-    { 
-        
-    
-    }
-    void CustomerAI() 
-    { 
-        
-    }
-
+   
 
     // Update is called once per frame
     void Update()
     {
+        MainAI2();
         //PathfindTEST();
         //Animate();
-        StartCoroutine(MainAI());
+        //StartCoroutine(MainAI()); no. just no.
         //StartCoroutine(RandomWaitInterval()); //DO NOT FORGET TO COMMENT THIS OUT (Doesn't crash. It's not the yield implementetion. It's the MainAI coroutine causing the problem itself.)
     }
 }
