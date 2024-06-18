@@ -91,12 +91,10 @@ public class CustomerBehavior : MonoBehaviour
             touch = false;
         }
         //customerState = State.Idle; //If things don't work, Uncomment this and commentize the same code that is in TriggerStay2D
-
     }
 
     void OnTriggerStay2D(Collider2D other)
-    {
-        
+    {       
         if (touch)
         {
             init = true;
