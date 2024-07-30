@@ -152,6 +152,8 @@ public class CustomerBehavior : MonoBehaviour
 
     IEnumerator MainAI2()
     {
+        Debug.Log("Beginning AI!");
+
         if (justStarted) 
         {
             target.SendMessage("TargetCenter"); // set target store
