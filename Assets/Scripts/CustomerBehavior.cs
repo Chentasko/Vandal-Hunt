@@ -78,9 +78,6 @@ public class CustomerBehavior : MonoBehaviour
         HandsMoving,
         Death,   
     }
-
-    [SerializeField] AudioSource customerAudio;
-    [SerializeField] AudioClip DEATH1;
     void OnTriggerEnter2D(Collider2D other)
     {     
         //Debug.Log("Touched target!");
@@ -247,53 +244,20 @@ public class CustomerBehavior : MonoBehaviour
         }
     }
 
-    IEnumerator DeathProcess() //this is probably not a good idea so it's best to rewrite it perhaps. the game also lags a lot unrelated to this coroutine.
-    {
-        if (criminal)
-        {
-            Debug.Log("!! !! !!YOU WIN!! !! !!");
-            text.SendMessage("Won");
-
-
-        }
-        else
-        {
-            Debug.Log("!! !! LOSER LOL !! !!");
-            text.SendMessage("Lost");
-
-        }
-
-        customerAudio.PlayOneShot(DEATH1); //DEATH AUDIO WORKS. you just don't hear it because it destroys itself, and the shooting is too loud.
-        float deathTime = 3;
-        float deathCurrentTime = 0;
-        while (deathCurrentTime <= deathTime)
-        {
-            deathCurrentTime += Time.deltaTime * waitMultiplier;
-            yield return null; // Wait for the next frame
-        }
-        Destroy(gameObject); //add wait befored death. check if it freezes anything too.
-        yield return null;
-    }
     public void OnDeath() 
     { 
-        //StartCoroutine(DeathProcess());
-
         if (criminal) 
         {
             Debug.Log("!! !! !!YOU WIN!! !! !!");
             text.SendMessage("Won");
-            
+            Destroy(gameObject);
 
         } else 
         {
             Debug.Log("!! !! LOSER LOL !! !!");
             text.SendMessage("Lost");
-            
+            Destroy(gameObject);
         }
-
-        customerAudio.PlayOneShot(DEATH1); //DEATH AUDIO WORKS. you just don't hear it because it destroys itself, and the shooting is too loud.
-
-        Destroy(gameObject); //add wait befored death. check if it freezes anything too.
 
     }
 
