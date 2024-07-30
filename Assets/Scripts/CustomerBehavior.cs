@@ -108,19 +108,19 @@ public class CustomerBehavior : MonoBehaviour
         customerState = State.Idle;
     }
 
-    void OnTriggerExit2D(Collider2D other)
-    {
+    //void OnTriggerExit2D(Collider2D other)
+    //{
         //Debug.Log("It is gone!");
-        if (touch) 
-        {
-            //Debug.Log("It is gone!");
-            touch = false;
-            customerState = State.Moving;
-        } else 
-        {
-            touch = true;
-        }
-    }
+    //    if (touch) 
+    //    {
+    //        //Debug.Log("It is gone!");
+    //        touch = false;
+    //        customerState = State.Moving;
+    //    } else 
+    //    {
+    //       touch = true;
+    //    }
+    //}
     IEnumerator DeltaWaitingCalculationsCoroutine()
     {
         waitTime = UnityEngine.Random.Range(waitMin, waitMax);
@@ -150,7 +150,7 @@ public class CustomerBehavior : MonoBehaviour
         Debug.Log("MOVE DONE");
     }
 
-    IEnumerator MainAI2()
+    IEnumerator MainAI2() //The cusromer uses this
     {
         Debug.Log("Beginning AI!");
 
