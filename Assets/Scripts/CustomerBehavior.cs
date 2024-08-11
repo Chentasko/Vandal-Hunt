@@ -150,6 +150,12 @@ public class CustomerBehavior : MonoBehaviour
         Debug.Log("MOVE DONE");
     }
 
+    void targetSpawn() 
+    {
+        //Instantiate(prefab, new Vector2(0,0), Quaternion.identity);
+    
+    }
+
     IEnumerator MainAI2() //The cusromer uses this
     {
         Debug.Log("Beginning AI!");
